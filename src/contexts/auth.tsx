@@ -5,10 +5,9 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  User,
+  
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
-
 
 // Tipos do Usuário
 interface UserData {
@@ -17,37 +16,28 @@ interface UserData {
   [key: string]: any;
 }
 
-// O que o Contexto fornece para a aplicação
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
 interface AuthContextData {
   signed: boolean;
   user: UserData | null;
   loading: boolean;
   loadingAuth: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (
-    email: string,
-    password: string,
-    extraData?: object
-  ) => Promise<void>;
+  signUp: (email: string, password: string, extraData?: object) => Promise<void>;
   logout: () => Promise<void>;
 }
 
-// Tipagem do Provider
-interface AuthProviderProps {
-  children: ReactNode;
-}
+export const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
-// Cria o contexto
-export const AuthContext = createContext<AuthContextData>(
-  {} as AuthContextData
-);
-
-export default function AuthProvider({ children }: AuthProviderProps) {
+function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<UserData | null>(null);
   const [loadingAuth, setLoadingAuth] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Monitora usuário logado (persistência)
+  // Monitora usuário logado
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
@@ -75,8 +65,8 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
-      const uid = result.user.uid;
 
+      const uid = result.user.uid;
       const ref = doc(db, "users", uid);
       const snap = await getDoc(ref);
 
@@ -97,12 +87,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     setLoadingAuth(true);
 
     try {
-      const result = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
+      const result = await createUserWithEmailAndPassword(auth, email, password);
       const uid = result.user.uid;
 
       await setDoc(doc(db, "users", uid), {
@@ -144,3 +129,6 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     </AuthContext.Provider>
   );
 }
+
+// 🔥 ESSA LINHA AQUI QUE RESOLVE SEU ERRO
+export default AuthProvider;
