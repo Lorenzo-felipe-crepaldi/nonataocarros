@@ -45,12 +45,10 @@ const Vendas: React.FC = () => {
     return value.toLocaleString('pt-BR');
   };
 
-  // Entrar -> rota /login
   const handleEntrar = () => {
     window.location.href = "/login";
   };
 
-  // Anunciar -> rota /anuncio (seu folder é /pages/anuncio)
   const handleAnunciar = () => {
     window.location.href = "/anuncio";
   };
@@ -215,9 +213,10 @@ const Vendas: React.FC = () => {
                       <div className="price">R$ {formatCurrency(car.price)}</div>
                     </div>
                     <div className="meta">{car.year} • {formatCurrency(car.km)} km • {car.category}</div>
+
                     <div className="actions">
                       <button className="primary" onClick={() => openModal(car)}>Ver detalhes</button>
-                      <button className="secondary" onClick={() => alert(`Simular proposta para ${car.title}`)}>Simular</button>
+
                       <button
                         className="secondary"
                         onClick={() => window.location.href = `/compra?id=${car.id}`}
@@ -256,12 +255,12 @@ const Vendas: React.FC = () => {
                 <div style={{color: 'var(--muted)', marginBottom: '8px'}}>
                   {selectedCar.year} • {formatCurrency(selectedCar.km)} km • {selectedCar.category}
                 </div>
+
                 <div style={{fontSize: '15px', marginBottom: '12px'}}>
                   {selectedCar.description}
                 </div>
 
                 <div style={{display: 'flex', gap: '8px'}}>
-                  <a href="/contato"><button className="primary">Solicitar contato</button></a>
                   <button className="secondary" onClick={closeModal}>Voltar</button>
                 </div>
               </div>
