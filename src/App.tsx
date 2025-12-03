@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Vendas from "./pages/vendas/page";
@@ -22,5 +21,3 @@ export default function App() {
     </Router>
   );
 }
-
-
